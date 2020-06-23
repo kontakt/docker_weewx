@@ -1,0 +1,7 @@
+configobj
+pillow
+pyserial
+pyusb
+cheetah3
+pyephem
+pymysql

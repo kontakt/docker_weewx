@@ -1,0 +1,47 @@
+version: '3.7'
+services:
+    #Weewx weather system
+    weewx:
+        image: weewx:test
+        volumes:
+            - weewx_page:/home/weewx/public_html
+            - ./weewx.conf:/home/weewx/weewx.conf
+        restart: always
+        privileged: true
+        devices:
+            - "/dev/ttyUSB0:/dev/ttyUSB0"
+
+    #Nginx service
+    webserver:
+        image: nginx
+        ports: 
+            - 8000:80
+        volumes:
+            - weewx_page:/usr/share/nginx/html:ro
+        healthcheck:
+            test: service nginx status || exit 1
+            interval: 30s
+            timeout: 5s
+            retries: 5
+        restart: always
+    
+    #MariaDB Database
+    database:
+        image: tobi312/rpi-mariadb
+        environment:
+            MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+            MYSQL_DATABASE: weewx
+            MYSQL_USER: weewx
+            MYSQL_PASSWORD: changeme
+        volumes:
+            - weewx_db:/var/lib/mysql
+        healthcheck:
+            test: mysqladmin ping -h 127.0.0.1 -u $$MYSQL_USER --password=$$MYSQL_PASSWORD || exit 1
+            interval: 30s
+            timeout: 5s
+            retries: 5
+        restart: always
+            
+volumes:
+    weewx_page:
+    weewx_db:

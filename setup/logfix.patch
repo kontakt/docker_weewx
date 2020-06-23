@@ -1,0 +1,11 @@
+--- C:\Users\chuff\Downloads\dist\weewx-4.1.1\bin\weeutil\logger.py
++++ C:\Users\chuff\Desktop\weewx_docker\logger_new.py
+@@ -28,7 +28,7 @@
+     # Root logger
+     [[root]]
+       level = {log_level}
+-      handlers = syslog,
++      handlers = console,
+ 
+     # Additional loggers would go in the following section. This is useful for tailoring logging
+     # for individual modules.
